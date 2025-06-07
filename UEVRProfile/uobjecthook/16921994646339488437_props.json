@@ -1,0 +1,13 @@
+{
+    "hide": true,
+    "hide_legacy": true,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "BuddyDroid",
+        "Components",
+        "StaticMeshComponent BD1_overcharge_panel"
+    ],
+    "properties": [],
+    "type": "properties"
+}

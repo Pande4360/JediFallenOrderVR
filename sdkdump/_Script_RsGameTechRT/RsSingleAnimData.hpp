@@ -1,0 +1,18 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include "RsDirectionalAnimData.hpp"
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_RsGameTechRT {
+#pragma pack(push, 1)
+struct RsSingleAnimData : public RsDirectionalAnimData {
+    private: char pad_30[0x48]; public:
+    void* get_AnimationData();
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0x78
+#pragma pack(pop)
+}

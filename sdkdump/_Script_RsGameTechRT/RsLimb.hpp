@@ -1,0 +1,27 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include "..\_Script_CoreUObject\Object.hpp"
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_Engine {
+struct HitResult;
+}
+namespace _Script_Engine {
+struct PrimitiveComponent;
+}
+namespace _Script_Engine {
+struct Actor;
+}
+namespace _Script_RsGameTechRT {
+#pragma pack(push, 1)
+struct RsLimb : public _Script_CoreUObject::Object {
+    private: char pad_28[0x78]; public:
+    static _Script_CoreUObject::Class* static_class();
+    void OnLimbComponentBeginOverlap(_Script_Engine::PrimitiveComponent* OverlappedComponent, _Script_Engine::Actor* OtherActor, _Script_Engine::PrimitiveComponent* OtherComp, int32_t OtherBodyIndex, bool bFromSweep, _Script_Engine::HitResult& SweepResult);
+}; // Size: 0xa0
+#pragma pack(pop)
+}

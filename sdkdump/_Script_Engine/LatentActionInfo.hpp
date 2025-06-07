@@ -1,0 +1,23 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+namespace _Script_CoreUObject {
+struct Object;
+}
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_Engine {
+#pragma pack(push, 1)
+struct LatentActionInfo {
+    private: char pad_0[0x18]; public:
+    int32_t& get_Linkage();
+    int32_t& get_UUID();
+    void* get_ExecutionFunction();
+    _Script_CoreUObject::Object*& get_CallbackTarget();
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0x18
+#pragma pack(pop)
+}

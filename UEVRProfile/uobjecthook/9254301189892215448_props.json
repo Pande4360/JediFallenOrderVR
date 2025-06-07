@@ -1,0 +1,16 @@
+{
+    "hide": false,
+    "hide_legacy": false,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "weaponCollision"
+    ],
+    "properties": [
+        {
+            "data": 0,
+            "name": "bHiddenInGame"
+        }
+    ],
+    "type": "properties"
+}

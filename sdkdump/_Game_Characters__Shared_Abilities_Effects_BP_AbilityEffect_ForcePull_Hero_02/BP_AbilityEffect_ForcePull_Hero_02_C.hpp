@@ -1,0 +1,16 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include "..\_Script_SwGame\SwForcePullAbilityEffect.hpp"
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Game_Characters__Shared_Abilities_Effects_BP_AbilityEffect_ForcePull_Hero_02 {
+#pragma pack(push, 1)
+struct BP_AbilityEffect_ForcePull_Hero_02_C : public _Script_SwGame::SwForcePullAbilityEffect {
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0x2c8
+#pragma pack(pop)
+}

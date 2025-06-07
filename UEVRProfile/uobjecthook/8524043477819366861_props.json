@@ -1,0 +1,18 @@
+{
+    "hide": false,
+    "hide_legacy": false,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "Mesh",
+        "Properties",
+        "AnimScriptInstance"
+    ],
+    "properties": [
+        {
+            "data": 1,
+            "name": "AtrTagIsAttacking"
+        }
+    ],
+    "type": "properties"
+}

@@ -1,0 +1,168 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include "DeveloperSettings.hpp"
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_Engine {
+#pragma pack(push, 1)
+struct RendererSettings : public DeveloperSettings {
+    private: char pad_38[0xa0]; public:
+    bool get_bMobileHDR();
+    void set_bMobileHDR(bool value);
+    bool get_bMobileDisableVertexFog();
+    void set_bMobileDisableVertexFog(bool value);
+    int32_t& get_MaxMobileCascades();
+    void* get_MobileMSAASampleCount();
+    bool get_bMobileUseLegacyShadingModel();
+    void set_bMobileUseLegacyShadingModel(bool value);
+    bool get_bMobileAllowDitheredLODTransition();
+    void set_bMobileAllowDitheredLODTransition(bool value);
+    bool get_bMobileAllowSoftwareOcclusionCulling();
+    void set_bMobileAllowSoftwareOcclusionCulling(bool value);
+    bool get_bDiscardUnusedQualityLevels();
+    void set_bDiscardUnusedQualityLevels(bool value);
+    bool get_bOcclusionCulling();
+    void set_bOcclusionCulling(bool value);
+    float& get_MinScreenRadiusForLights();
+    float& get_MinScreenRadiusForEarlyZPass();
+    float& get_MinScreenRadiusForCSMdepth();
+    bool get_bPrecomputedVisibilityWarning();
+    void set_bPrecomputedVisibilityWarning(bool value);
+    bool get_bTextureStreaming();
+    void set_bTextureStreaming(bool value);
+    bool get_bUseDXT5NormalMaps();
+    void set_bUseDXT5NormalMaps(bool value);
+    bool get_bClearCoatEnableSecondNormal();
+    void set_bClearCoatEnableSecondNormal(bool value);
+    int32_t& get_ReflectionCaptureResolution();
+    bool get_ReflectionEnvironmentLightmapMixBasedOnRoughness();
+    void set_ReflectionEnvironmentLightmapMixBasedOnRoughness(bool value);
+    bool get_bForwardShading();
+    void set_bForwardShading(bool value);
+    bool get_bVertexFoggingForOpaque();
+    void set_bVertexFoggingForOpaque(bool value);
+    bool get_bAllowStaticLighting();
+    void set_bAllowStaticLighting(bool value);
+    bool get_bUseNormalMapsForStaticLighting();
+    void set_bUseNormalMapsForStaticLighting(bool value);
+    bool get_bGenerateMeshDistanceFields();
+    void set_bGenerateMeshDistanceFields(bool value);
+    bool get_bEightBitMeshDistanceFields();
+    void set_bEightBitMeshDistanceFields(bool value);
+    bool get_bGenerateLandscapeGIData();
+    void set_bGenerateLandscapeGIData(bool value);
+    bool get_bCompressMeshDistanceFields();
+    void set_bCompressMeshDistanceFields(bool value);
+    float& get_TessellationAdaptivePixelsPerTriangle();
+    bool get_bSeparateTranslucency();
+    void set_bSeparateTranslucency(bool value);
+    void* get_TranslucentSortPolicy();
+    void* get_TranslucentSortAxis();
+    void* get_CustomDepthStencil();
+    bool get_bCustomDepthTaaJitter();
+    void set_bCustomDepthTaaJitter(bool value);
+    void* get_bEnableAlphaChannelInPostProcessing();
+    bool get_bUseNewAlgorithm();
+    void set_bUseNewAlgorithm(bool value);
+    bool get_bDefaultFeatureBloom();
+    void set_bDefaultFeatureBloom(bool value);
+    bool get_bDefaultFeatureAmbientOcclusion();
+    void set_bDefaultFeatureAmbientOcclusion(bool value);
+    bool get_bDefaultFeatureAmbientOcclusionStaticFraction();
+    void set_bDefaultFeatureAmbientOcclusionStaticFraction(bool value);
+    bool get_bDefaultFeatureAutoExposure();
+    void set_bDefaultFeatureAutoExposure(bool value);
+    void* get_DefaultFeatureAutoExposure();
+    bool get_bExtendDefaultLuminanceRangeInAutoExposureSettings();
+    void set_bExtendDefaultLuminanceRangeInAutoExposureSettings(bool value);
+    bool get_bUsePreExposure();
+    void set_bUsePreExposure(bool value);
+    bool get_bDefaultFeatureMotionBlur();
+    void set_bDefaultFeatureMotionBlur(bool value);
+    bool get_bDefaultFeatureLensFlare();
+    void set_bDefaultFeatureLensFlare(bool value);
+    bool get_bTemporalUpsampling();
+    void set_bTemporalUpsampling(bool value);
+    void* get_DefaultFeatureAntiAliasing();
+    void* get_DefaultLightUnits();
+    void* get_DefaultBackBufferPixelFormat();
+    bool get_bRenderUnbuiltPreviewShadowsInGame();
+    void set_bRenderUnbuiltPreviewShadowsInGame(bool value);
+    bool get_bStencilForLODDither();
+    void set_bStencilForLODDither(bool value);
+    void* get_EarlyZPass();
+    bool get_bEarlyZPassMovable();
+    void set_bEarlyZPassMovable(bool value);
+    bool get_bEarlyZPassOnlyMaterialMasking();
+    void set_bEarlyZPassOnlyMaterialMasking(bool value);
+    bool get_bDBuffer();
+    void set_bDBuffer(bool value);
+    void* get_ClearSceneMethod();
+    bool get_bBasePassOutputsVelocity();
+    void set_bBasePassOutputsVelocity(bool value);
+    bool get_bSelectiveBasePassOutputs();
+    void set_bSelectiveBasePassOutputs(bool value);
+    bool get_bDefaultParticleCutouts();
+    void set_bDefaultParticleCutouts(bool value);
+    int32_t& get_GPUSimulationTextureSizeX();
+    int32_t& get_GPUSimulationTextureSizeY();
+    bool get_bGlobalClipPlane();
+    void set_bGlobalClipPlane(bool value);
+    void* get_GBufferFormat();
+    bool get_bUseGPUMorphTargets();
+    void set_bUseGPUMorphTargets(bool value);
+    bool get_bNvidiaAftermathEnabled();
+    void set_bNvidiaAftermathEnabled(bool value);
+    bool get_bInstancedStereo();
+    void set_bInstancedStereo(bool value);
+    bool get_bMultiView();
+    void set_bMultiView(bool value);
+    bool get_bMobileMultiView();
+    void set_bMobileMultiView(bool value);
+    bool get_bMobileMultiViewDirect();
+    void set_bMobileMultiViewDirect(bool value);
+    bool get_bMonoscopicFarField();
+    void set_bMonoscopicFarField(bool value);
+    bool get_bRoundRobinOcclusion();
+    void set_bRoundRobinOcclusion(bool value);
+    bool get_bODSCapture();
+    void set_bODSCapture(bool value);
+    float& get_WireframeCullThreshold();
+    bool get_bSupportStationarySkylight();
+    void set_bSupportStationarySkylight(bool value);
+    bool get_bSupportLowQualityLightmaps();
+    void set_bSupportLowQualityLightmaps(bool value);
+    bool get_bSupportPointLightWholeSceneShadows();
+    void set_bSupportPointLightWholeSceneShadows(bool value);
+    bool get_bSupportAtmosphericFog();
+    void set_bSupportAtmosphericFog(bool value);
+    bool get_bSupportSkinCacheShaders();
+    void set_bSupportSkinCacheShaders(bool value);
+    bool get_bMobileEnableStaticAndCSMShadowReceivers();
+    void set_bMobileEnableStaticAndCSMShadowReceivers(bool value);
+    bool get_bMobileEnableMovableLightCSMShaderCulling();
+    void set_bMobileEnableMovableLightCSMShaderCulling(bool value);
+    bool get_bMobileAllowDistanceFieldShadows();
+    void set_bMobileAllowDistanceFieldShadows(bool value);
+    bool get_bMobileAllowMovableDirectionalLights();
+    void set_bMobileAllowMovableDirectionalLights(bool value);
+    void* get_MobileNumDynamicPointLights();
+    bool get_bMobileDynamicPointLightsUseStaticBranch();
+    void set_bMobileDynamicPointLightsUseStaticBranch(bool value);
+    float& get_SkinCacheSceneMemoryLimitInMB();
+    bool get_bGPUSkinLimit2BoneInfluences();
+    void set_bGPUSkinLimit2BoneInfluences(bool value);
+    bool get_bSupportDepthOnlyIndexBuffers();
+    void set_bSupportDepthOnlyIndexBuffers(bool value);
+    bool get_bSupportReversedIndexBuffers();
+    void set_bSupportReversedIndexBuffers(bool value);
+    bool get_bSupportMaterialLayers();
+    void set_bSupportMaterialLayers(bool value);
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0xd8
+#pragma pack(pop)
+}

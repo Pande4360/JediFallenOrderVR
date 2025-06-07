@@ -1,0 +1,13 @@
+{
+    "hide": true,
+    "hide_legacy": false,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "BuddyDroid",
+        "Components",
+        "RsActorSkeletalMeshComponent CharacterMesh0"
+    ],
+    "properties": [],
+    "type": "properties"
+}

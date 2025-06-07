@@ -1,0 +1,21 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_Engine {
+#pragma pack(push, 1)
+struct KAggregateGeom {
+    private: char pad_0[0x58]; public:
+    void* get_SphereElems();
+    void* get_BoxElems();
+    void* get_SphylElems();
+    void* get_ConvexElems();
+    void* get_TaperedCapsuleElems();
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0x58
+#pragma pack(pop)
+}

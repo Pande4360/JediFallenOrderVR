@@ -1,0 +1,20 @@
+{
+    "hide": true,
+    "hide_legacy": true,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "Lightsaber_01",
+        "Properties",
+        "AttachChildren",
+        "SkeletalMeshComponent LightsaberSkelMesh",
+        "Properties",
+        "AttachChildren",
+        "StaticMeshComponent Saber_Blade",
+        "Properties",
+        "AttachChildren",
+        "ParticleSystemComponent P_Lightsaber_Extend"
+    ],
+    "properties": [],
+    "type": "properties"
+}

@@ -1,0 +1,187 @@
+#pragma once
+#include <Windows.h>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include "MaterialInterface.hpp"
+namespace _Script_Engine {
+struct PhysicalMaterial;
+}
+namespace _Script_CoreUObject {
+struct Class;
+}
+namespace _Script_Engine {
+#pragma pack(push, 1)
+struct Material : public MaterialInterface {
+    private: char pad_88[0x288]; public:
+    _Script_Engine::PhysicalMaterial*& get_PhysMaterial();
+    void* get_Metallic();
+    void* get_Specular();
+    void* get_Normal();
+    void* get_EmissiveColor();
+    void* get_MaterialDomain();
+    void* get_BlendMode();
+    void* get_DecalBlendMode();
+    void* get_MaterialDecalResponse();
+    void* get_ShadingModel();
+    float& get_EmissiveBrightnessRange();
+    float& get_DitheredOpacityFadeStart();
+    float& get_DitheredOpacityFadeEnd();
+    float& get_OpacityMaskClipValue();
+    bool get_bCastDynamicShadowAsMasked();
+    void set_bCastDynamicShadowAsMasked(bool value);
+    void* get_WorldPositionOffset();
+    void* get_Refraction();
+    void* get_MaterialAttributes();
+    void* get_PixelDepthOffset();
+    void* get_GroundBlendFactor();
+    bool get_bEnableGroundBlending();
+    void set_bEnableGroundBlending(bool value);
+    bool get_bEnableSeparateTranslucency();
+    void set_bEnableSeparateTranslucency(bool value);
+    bool get_bEnableMobileSeparateTranslucency();
+    void set_bEnableMobileSeparateTranslucency(bool value);
+    bool get_bEnableResponsiveAA();
+    void set_bEnableResponsiveAA(bool value);
+    bool get_bScreenSpaceReflections();
+    void set_bScreenSpaceReflections(bool value);
+    bool get_bContactShadows();
+    void set_bContactShadows(bool value);
+    bool get_bMaskSSR();
+    void set_bMaskSSR(bool value);
+    bool get_TwoSided();
+    void set_TwoSided(bool value);
+    bool get_DitheredLODTransition();
+    void set_DitheredLODTransition(bool value);
+    bool get_DitherOpacityMask();
+    void set_DitherOpacityMask(bool value);
+    bool get_bAllowNegativeEmissiveColor();
+    void set_bAllowNegativeEmissiveColor(bool value);
+    int32_t& get_NumCustomizedUVs();
+    void* get_AdditionalHeaderIncludes();
+    void* get_ColorWriteMask();
+    void* get_TranslucencyLightingMode();
+    float& get_TranslucencyDirectionalLightingIntensity();
+    bool get_AllowTranslucentCustomDepthWrites();
+    void set_AllowTranslucentCustomDepthWrites(bool value);
+    float& get_TranslucentShadowDensityScale();
+    float& get_TranslucentSelfShadowDensityScale();
+    float& get_TranslucentSelfShadowSecondDensityScale();
+    float& get_TranslucentSelfShadowSecondOpacity();
+    float& get_TranslucentBackscatteringExponent();
+    void* get_TranslucentMultipleScatteringExtinction();
+    float& get_TranslucentShadowStartOffset();
+    bool get_bDisableDepthTest();
+    void set_bDisableDepthTest(bool value);
+    bool get_bWriteOnlyAlpha();
+    void set_bWriteOnlyAlpha(bool value);
+    bool get_bGenerateSphericalParticleNormals();
+    void set_bGenerateSphericalParticleNormals(bool value);
+    bool get_bTangentSpaceNormal();
+    void set_bTangentSpaceNormal(bool value);
+    bool get_bUseEmissiveForDynamicAreaLighting();
+    void set_bUseEmissiveForDynamicAreaLighting(bool value);
+    bool get_bBlockGI();
+    void set_bBlockGI(bool value);
+    bool get_bUsedAsSpecialEngineMaterial();
+    void set_bUsedAsSpecialEngineMaterial(bool value);
+    bool get_bUsedWithSkeletalMesh();
+    void set_bUsedWithSkeletalMesh(bool value);
+    bool get_bUsedWithEditorCompositing();
+    void set_bUsedWithEditorCompositing(bool value);
+    bool get_bUsedWithParticleSprites();
+    void set_bUsedWithParticleSprites(bool value);
+    bool get_bUsedWithBeamTrails();
+    void set_bUsedWithBeamTrails(bool value);
+    bool get_bUsedWithMeshParticles();
+    void set_bUsedWithMeshParticles(bool value);
+    bool get_bUsedWithNiagaraSprites();
+    void set_bUsedWithNiagaraSprites(bool value);
+    bool get_bUsedWithNiagaraRibbons();
+    void set_bUsedWithNiagaraRibbons(bool value);
+    bool get_bUsedWithNiagaraMeshParticles();
+    void set_bUsedWithNiagaraMeshParticles(bool value);
+    bool get_bUsedWithGeometryCache();
+    void set_bUsedWithGeometryCache(bool value);
+    bool get_bUsedWithStaticLighting();
+    void set_bUsedWithStaticLighting(bool value);
+    bool get_bUsedWithMorphTargets();
+    void set_bUsedWithMorphTargets(bool value);
+    bool get_bUsedWithSplineMeshes();
+    void set_bUsedWithSplineMeshes(bool value);
+    bool get_bUsedWithInstancedStaticMeshes();
+    void set_bUsedWithInstancedStaticMeshes(bool value);
+    bool get_bUsedWithClothing();
+    void set_bUsedWithClothing(bool value);
+    bool get_bUsedWithWorldMap();
+    void set_bUsedWithWorldMap(bool value);
+    bool get_bUsedWithUI();
+    void set_bUsedWithUI(bool value);
+    bool get_bAutomaticallySetUsageInEditor();
+    void set_bAutomaticallySetUsageInEditor(bool value);
+    bool get_bUsesDistortion();
+    void set_bUsesDistortion(bool value);
+    bool get_bOccludesEyeShading();
+    void set_bOccludesEyeShading(bool value);
+    bool get_bAdjustEmissiveForEyeAdaptation();
+    void set_bAdjustEmissiveForEyeAdaptation(bool value);
+    bool get_bFullyRough();
+    void set_bFullyRough(bool value);
+    bool get_bUsesDitherFactor();
+    void set_bUsesDitherFactor(bool value);
+    bool get_bUseFullPrecision();
+    void set_bUseFullPrecision(bool value);
+    bool get_bUseLightmapDirectionality();
+    void set_bUseLightmapDirectionality(bool value);
+    bool get_bUseHQForwardReflections();
+    void set_bUseHQForwardReflections(bool value);
+    bool get_bUsePlanarForwardReflections();
+    void set_bUsePlanarForwardReflections(bool value);
+    bool get_bNormalCurvatureToRoughness();
+    void set_bNormalCurvatureToRoughness(bool value);
+    void* get_D3D11TessellationMode();
+    bool get_bEnableCrackFreeDisplacement();
+    void set_bEnableCrackFreeDisplacement(bool value);
+    bool get_bEnableAdaptiveTessellation();
+    void set_bEnableAdaptiveTessellation(bool value);
+    float& get_MaxDisplacement();
+    bool get_Wireframe();
+    void set_Wireframe(bool value);
+    bool get_bOutputVelocityOnBasePass();
+    void set_bOutputVelocityOnBasePass(bool value);
+    void* get_Expressions();
+    void* get_MaterialFunctionInfos();
+    void* get_MaterialParameterCollectionInfos();
+    void* get_MaterialParameterLocalCollectionInfos();
+    bool get_bCanMaskedBeAssumedOpaque();
+    void set_bCanMaskedBeAssumedOpaque(bool value);
+    bool get_bIsMasked();
+    void set_bIsMasked(bool value);
+    bool get_bIsPreviewMaterial();
+    void set_bIsPreviewMaterial(bool value);
+    bool get_bIsFunctionPreviewMaterial();
+    void set_bIsFunctionPreviewMaterial(bool value);
+    bool get_bUseMaterialAttributes();
+    void set_bUseMaterialAttributes(bool value);
+    bool get_bUseTranslucencyVertexFog();
+    void set_bUseTranslucencyVertexFog(bool value);
+    bool get_bComputeFogPerPixel();
+    void set_bComputeFogPerPixel(bool value);
+    bool get_bAllowDevelopmentShaderCompile();
+    void set_bAllowDevelopmentShaderCompile(bool value);
+    bool get_bIsMaterialEditorStatsMaterial();
+    void set_bIsMaterialEditorStatsMaterial(bool value);
+    void* get_UsageFlagWarnings();
+    void* get_BlendableLocation();
+    int32_t& get_BlendablePriority();
+    bool get_BlendableOutputAlpha();
+    void set_BlendableOutputAlpha(bool value);
+    void* get_RefractionMode();
+    float& get_RefractionDepthBias();
+    void* get_StateId();
+    void* get_CachedQualityLevelsUsed();
+    void* get_ExpressionTextureReferences();
+    static _Script_CoreUObject::Class* static_class();
+}; // Size: 0x310
+#pragma pack(pop)
+}
