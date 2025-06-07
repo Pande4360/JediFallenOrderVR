@@ -47,11 +47,13 @@ local ForwardBackwardScaleFactor=0
 
 uevr.sdk.callbacks.on_pre_engine_tick(
 function(engine, delta)
-local pawn = api:get_local_pawn(0)
-local player =api:get_player_controller(0)
+	local pawn = api:get_local_pawn(0)
+	local player =api:get_player_controller(0)
 	local RotatorXYZ= right_hand_component:K2_GetComponentRotation()
-	player:SetCameraRotation(RotatorXYZ)
-	pawn.Instigator:RotateToAlignXY({RotatorXYZ.x,RotatorXYZ.y})
+	
+	
+	player:ClientSetRotation(RotatorXYZ,true)
+	--pawn.Instigator:RotateToAlignXY({RotatorXYZ.x,RotatorXYZ.y})
 	
 
 

@@ -109,9 +109,15 @@ function unpressButton(state, button)
 	state.Gamepad.wButtons = state.Gamepad.wButtons & ~(button)
 end
 --
+--Library
+local GameplayStDef= find_required_object("GameplayStatics /Script/Engine.Default__GameplayStatics")
+local game_engine_class = find_required_object("Class /Script/Engine.GameEngine")
+local game_engine = UEVR_UObjectHook.get_first_object_by_class(game_engine_class)
+local viewport = game_engine.GameViewport
+local world = viewport.World
 
 --GLOBAL VARIABLES
-current_scope_state=false
+isMenu=false
 
 
 --Dynamic helper functions:
@@ -169,7 +175,11 @@ function UpdateInput(state)
 
 end
 
-
+local function UpdateMenuStatus(pawn,world)
+	if GameplayStDef:IsGamePaused(world) or pawn.HC_WorldMap.ShowMap then
+		isMenu=true
+	else isMenu=false end
+end
 
 uevr.sdk.callbacks.on_xinput_get_state(
 function(retval, user_index, state)
@@ -190,10 +200,19 @@ dpawn=api:get_local_pawn(0)
 end)
 
 uevr.sdk.callbacks.on_pre_engine_tick(
-	function(engine, delta)
-local dpawn=nil
-dpawn=api:get_local_pawn(0)	
-local Player=api:get_player_controller(0)	
---local PMesh=pawn.FirstPersonSkeletalMeshComponent
+function(engine, delta)
+--local	dpawn=api:get_local_pawn(0)
+	viewport = game_engine.GameViewport
+	world = viewport.World
+	local dpawn=api:get_local_pawn(0)	
+	local Player=api:get_player_controller(0)	
+	
+	UpdateMenuStatus(dpawn,world)
+	
+		
+		
+		--isMenu=GameplayStDef:IsGamePaused(world)
+		
+		--local PMesh=pawn.FirstPersonSkeletalMeshComponent
 
 end)

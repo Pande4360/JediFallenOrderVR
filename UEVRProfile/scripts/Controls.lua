@@ -56,8 +56,11 @@ uevr.sdk.callbacks.on_xinput_get_state(
 function(retval, user_index, state)
 
 	if not isMenu then
+		unpressButton(state,XINPUT_GAMEPAD_A)
+		unpressButton(state,XINPUT_GAMEPAD_B)
 		if ThumbRY > 30000 then
 			pressButton(state,XINPUT_GAMEPAD_A)
+			
 		end
 		if ThumbRY < -30000 then
 			pressButton(state,XINPUT_GAMEPAD_B)

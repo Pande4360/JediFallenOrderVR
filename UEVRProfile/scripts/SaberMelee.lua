@@ -126,11 +126,6 @@ function(engine, delta)
 		
 		
 		
-		if ToggleSaber and isToggled == false then	
-			CurrentSaberStatus=not CurrentSaberStatus
-			pawn.LightsaberChild_01:ExtendRetractBlade(CurrentSaberStatus,false)
-			isToggled=true
-		end
 		--print(LastTarget)
 		for i, comp in ipairs(_Comps) do
 			if comp:GetOwner() ~= nil then
