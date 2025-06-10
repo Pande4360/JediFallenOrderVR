@@ -115,11 +115,11 @@ local player= api:get_player_controller(0)
 	
 	
 	
-if isSaberExtended then
-		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
-else
-		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
-end
+--if isSaberExtended then
+--		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+--		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+--else
+--		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+--		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+--end
 end)

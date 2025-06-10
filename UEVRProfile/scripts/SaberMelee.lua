@@ -136,7 +136,7 @@ function(engine, delta)
 			--print(comp:get_fname():to_string())
 			--comp:SetHiddenInGame(false,true)
 			--comp:SetVisibility(1)
-			comp.CapsuleRadius=100
+			comp.CapsuleRadius=60
 			--comp.CapsuleHalfHeight=1
 			end
 			if comp:get_fname():to_string() == "weaponCollision" then
@@ -172,10 +172,15 @@ function(engine, delta)
 		--print(pawn.Mesh:GetCollisionObjectType())
 		
 		--print(LastTarget)
+	if isSaberExtended then	
 		for i, comp in ipairs(_Comps) do
 			--print(comp:get_fname():to_string())
 			if string.find(comp:GetOwner():get_fname():to_string(), "Blaster") or string.find(comp:get_fname():to_string(), "weaponCollision") then
-				print(comp:get_fname():to_string())
+				--print(comp:get_fname():to_string())
+				if string.find(comp:GetOwner():get_fname():to_string(), "Blaster") then
+					comp.CapsuleRadius=100
+				end
+				 
 				pawn.HC_Defense:call("Block Pressed")
 				--pawn.HC_Defense:call("Block Released")
 				--pawn.HC_Defense:
@@ -191,7 +196,7 @@ function(engine, delta)
 					local Damage = PosDiffWeaponHand/25 *50
 					--pawn.HC_Defense:EnterBlock(false,0)
 					--pawn.HC_Defense:ExitBlock()
-					if PosDiffWeaponHand<10 then
+					if PosDiffWeaponHand<5 then
 					--comp:GetOwner().SwAIDefense:StartBlock(pawn,false,1)
 					--comp:GetOwner().SwAIDefense:BlockContact(pawn)
 					--	GameplayStatics:RsApplyDamage(comp:GetOwner(),comp,2,nil,pawn,nil,reusable_DmgParam,var1)
@@ -223,7 +228,7 @@ function(engine, delta)
 			
 		end
 		
-		
+	end	
 		
 		
 		--print(" ")

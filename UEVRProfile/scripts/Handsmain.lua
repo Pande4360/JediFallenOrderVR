@@ -33,11 +33,11 @@ function on_lazy_poll()
 			if pawn ~=nil then
 				--if string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Robe") then
 				if isSaberExtended then
-					pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
 					hands.create(pawn.Mesh)
-					pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
 				else
 				hands.create(pawn.Mesh)
 				end
@@ -348,11 +348,11 @@ if not hands.exists()   then
 			hands.destroyHands()
 			--hands.reset()
 			
-					pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
 					hands.create(pawn.Mesh)
-					pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
 				
 			--else--if 	--string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Cuirass") then
 			--	if pawn.FirstPersonHandsChildActorComponent.ChildActor ~=nil then
