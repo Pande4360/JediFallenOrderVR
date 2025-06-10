@@ -4,12 +4,12 @@
     "path": [
         "Acknowledged Pawn",
         "Properties",
-        "weaponCollision"
+        "LightsaberChild_01"
     ],
     "properties": [
         {
-            "data": 0,
-            "name": "bHiddenInGame"
+            "data": 1101004800,
+            "name": "CustomTimeDilation"
         }
     ],
     "type": "properties"

@@ -23,23 +23,28 @@ function find_static_class(name)
     return c:get_class_default_object()
 end
 
+local isToggled=false
+
+
 local function ToggleBlade(pawn)
+	local ExtendDir= pawn.LightsaberChild_01.ExtendDir
 	if Abutton then
-			ToggleSaber = true
-		else ToggleSaber= false
+		if isSaberExtended and isToggled==false then 
+			pawn.LightsaberChild_01:ExtendRetractBlade(false,false)
+			isToggled=true
+		elseif not isSaberExtended and isToggled==false then
+			pawn.LightsaberChild_01:ExtendRetractBlade(true,false)
+			isToggled=true
+		end
+	end
+	if not Abutton then
 		isToggled=false
 	end	
 
-	if ToggleSaber and isToggled == false then	
-		CurrentSaberStatus=not CurrentSaberStatus
-		pawn.LightsaberChild_01:ExtendRetractBlade(CurrentSaberStatus,false)
-		isToggled=true
-	end
 end
 
 
-local isToggled=false
-local CurrentSaberStatus= false
+
 
 
 uevr.sdk.callbacks.on_pre_engine_tick(

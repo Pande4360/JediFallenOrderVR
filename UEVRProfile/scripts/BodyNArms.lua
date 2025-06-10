@@ -1,0 +1,125 @@
+local uevrUtils = require("libs/uevr_utils")
+require(".\\Subsystems\\UEHelper")
+require(".\\Trackers\\Trackers")
+
+local api = uevr.api
+local vr = uevr.params.vr
+
+
+function find_required_object(name)
+    local obj = uevr.api:find_uobject(name)
+    if not obj then
+        error("Cannot find " .. name)
+        return nil
+    end
+
+    return obj
+end
+
+function find_static_class(name)
+    local c = find_required_object(name)
+    return c:get_class_default_object()
+end
+
+local kismet_math_library = find_static_class("Class /Script/Engine.KismetMathLibrary")
+
+local function GetHmdTiltOffset()
+
+	if HmdRotator==nil then return end
+	
+	local Offset= HmdRotator.x/90* 20
+	
+	return Offset
+	
+	
+end
+
+local Neutral = 0
+local Offset=0
+local HmdRotatorYLast=0
+local function GetHmdYawOffset()
+	if HmdRotator==nil then return end
+	--print(HmdRotator.y)
+	
+	
+	local deltaOffset= 0
+	if math.abs(HmdRotator.y - HmdRotatorYLast) < 90 then
+		deltaOffset=HmdRotator.y - HmdRotatorYLast
+	else
+		deltaOffset= 1
+	end
+	
+	if math.abs(Offset) <= 70 then
+		Offset= Offset+deltaOffset
+	elseif Offset >70 then
+		Offset=70
+	elseif Offset< -70 then
+		Offset=-70
+	end
+	
+	if ThumbLY>15000 then
+			Offset=Offset/4
+	end
+	
+	local YawOffset= Offset/180*math.pi
+	
+	HmdRotatorYLast=HmdRotator.y
+	--print(Offset)
+	--print(YawOffset)
+	return YawOffset
+end
+
+
+local function UpdateBody(pawn,player)
+	if pawn ==nil then return end
+			local Mesh=pawn.Mesh
+			local default_transform = Mesh:GetSocketTransform("Origin",2)--Transform(attach_socket_name, 2)
+			local offset_transform = Mesh:GetSocketTransform("head",2)--weapon_mesh:GetSocketTransform("jnt_offset", 2)
+		if player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="NavFollow"  then
+			--local middle_translation = kismet_math_library:Add_VectorVector(default_transform.Translation, offset_transform.Translation)
+			local location_diff = kismet_math_library:Subtract_VectorVector(
+				default_transform.Translation,
+				offset_transform.Translation--Vector3f.new(0,0,0)
+			)
+			-- from UE to UEVR X->Z Y->-X, Z->-Y
+			-- Z - forward, X - negative right, Y - negative up
+			local lossy_offset = Vector3f.new(-location_diff.y, -location_diff.z, location_diff.x)-- y +GetHmdTiltOffset()+10
+			
+			
+			UEVR_UObjectHook.get_or_add_motion_controller_state(Mesh):set_hand(2)
+			UEVR_UObjectHook.get_or_add_motion_controller_state(Mesh):set_rotation_offset(Vector3f.new(HmdRotator.x/180*math.pi,90/180*math.pi+GetHmdYawOffset(),HmdRotator.z/180*math.pi))
+			UEVR_UObjectHook.get_or_add_motion_controller_state(Mesh):set_location_offset(lossy_offset)
+		else UEVR_UObjectHook.remove_motion_controller_state(Mesh)
+		end
+			
+end
+
+local kismet_string_library = find_static_class("Class /Script/Engine.KismetStringLibrary")
+
+uevr.sdk.callbacks.on_pre_engine_tick(
+function(engine, delta)
+	
+local pawn= api:get_local_pawn(0)	
+local player= api:get_player_controller(0)	
+	
+	
+
+	--UpdateBody(pawn,player)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+if isSaberExtended then
+		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+		pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+else
+		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+		pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+end
+end)

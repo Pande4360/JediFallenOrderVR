@@ -1,0 +1,26 @@
+{
+    "hide": false,
+    "hide_legacy": false,
+    "path": [
+        "Acknowledged Pawn",
+        "Properties",
+        "weaponCollision",
+        "Properties",
+        "BodyInstance",
+        "Properties",
+        "CollisionResponses",
+        "Properties",
+        "ResponseToChannels"
+    ],
+    "properties": [
+        {
+            "data": 1,
+            "name": "EngineTraceChannel6"
+        },
+        {
+            "data": 1,
+            "name": "GameTraceChannel1"
+        }
+    ],
+    "type": "properties"
+}

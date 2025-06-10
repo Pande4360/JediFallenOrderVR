@@ -23,6 +23,7 @@ local hitresult_c = find_required_object("ScriptStruct /Script/Engine.HitResult"
 local reusable_hit_result1 = StructObject.new(hitresult_c)
 local POIDataStruct= find_required_object("UserDefinedStruct /Game/GlobalData/Structs/Struct_CameraPOIVar.Struct_CameraPOIVar")
 local reusable_POIData= StructObject.new(POIDataStruct)
+local kismet_math_library = find_static_class("Class /Script/Engine.KismetMathLibrary")
 --local Actor= find_required_object("BOG_Global_Snd_C /Game/Levels/Bogano/BOGGlobal/SubLevels/BOG_Global_Snd.BOG_Global_Snd.PersistentLevel.BOG_Global_Snd_C_3")
 --reusable_POIData.FocusActor = Actor
 
@@ -50,10 +51,16 @@ function(engine, delta)
 	local pawn = api:get_local_pawn(0)
 	local player =api:get_player_controller(0)
 	local RotatorXYZ= right_hand_component:K2_GetComponentRotation()
+	HmdVector=hmd_component:GetForwardVector()
+	HandVector= right_hand_component:GetForwardVector()
 	
-	
+	local HmdXY= hmd_component:K2_GetComponentRotation()
+
+if isNavMode then
+
 	player:ClientSetRotation(RotatorXYZ,true)
-	--pawn.Instigator:RotateToAlignXY({RotatorXYZ.x,RotatorXYZ.y})
+end
+--	pawn.Instigator:RotateToAlignXY({HmdXY.x,HmdXY.y})
 	
 
 
@@ -75,8 +82,7 @@ function(engine, delta)
 		
 		
 		
-		HmdVector=hmd_component:GetForwardVector()
-		HandVector= right_hand_component:GetForwardVector()
+		
 		
 	--	VecAlpha = (HandVector.x - HmdVector.x, HandVector.y - HmdVector.y, HandVector.z - HmdVector.z)
 							local VecAlphaX= HandVector.x - HmdVector.x
@@ -167,11 +173,11 @@ function(retval, user_index, state)
 	
 	
 	
-	
+	if isNavMode then
 		state.Gamepad.sThumbLX= ThumbLX*math.cos(-AlphaDiff)- ThumbLY*math.sin(-AlphaDiff)
 				
 		state.Gamepad.sThumbLY= math.sin(-AlphaDiff)*ThumbLX + ThumbLY*math.cos(-AlphaDiff)
-		
+	end	
 	--end
 
 
@@ -217,17 +223,51 @@ uevr.sdk.callbacks.on_early_calculate_stereo_view_offset(function(device, view_i
 PreRot=rotation.y
 DiffRot= HmdRotator.y - RightRotator.y
 
-
+if isNavMode then
 	rotation.y = DecoupledYawCurrentRot
-	
+end	
 	
 	--vr.recenter_view()
 local pawn = api:get_local_pawn(0)	
 
-position.z = pawn:K2_GetActorLocation().z+70
-position.x = pawn:K2_GetActorLocation().x
-position.y = pawn:K2_GetActorLocation().y
+local Mesh=pawn.Mesh
+			local default_transform = Mesh:GetSocketTransform("rootSocket",2)--Transform(attach_socket_name, 2)
+			local offset_transform = Mesh:GetSocketTransform("head_socket",2)--weapon_mesh:GetSocketTransform("jnt_offset", 2)
+			
+			--local middle_translation = kismet_math_library:Add_VectorVector(default_transform.Translation, offset_transform.Translation)
+			local location_diff = kismet_math_library:Subtract_VectorVector(
+				Vector3f.new(0,0,0),
+				offset_transform.Translation--Vector3f.new(0,0,0)
+			)
+			-- from UE to UEVR X->Z Y->-X, Z->-Y
+			-- Z - forward, X - negative right, Y - negative up
+			local lossy_offset = Vector3f.new(-location_diff.y, -location_diff.z, location_diff.x)
 
+
+--print(isCinematic)
+if not isCinematic then
+	--if   player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="NavFollow"  then
+		position.z = pawn:K2_GetActorLocation().z+80
+		--local BaseFactor= pawn.Mesh:GetSocketTransform("headSocket").Translation - pawn.Mesh:GetSocketTransform("rootSocket").Translation
+		--
+		--local DIst= math.sqrt(BaseFactor.x^2+BaseFactor.y^2)
+		
+		
+		
+			
+		--if BaseFactor~=0 then
+			position.x = pawn:K2_GetActorLocation().x--+pawn:GetActorForwardVector().x*DIst	+pawn:GetActorForwardVector().x*10
+			position.y = pawn:K2_GetActorLocation().y--+pawn:GetActorForwardVector().y*DIst   +pawn:GetActorForwardVector().y*10
+		--else
+		--	position.x = pawn:K2_GetActorLocation().x
+		--	position.y = pawn:K2_GetActorLocation().y
+		--end
+	--elseif not player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="NavFollow" then
+	--	position.z = pawn.Mesh:GetSocketTransform("headSocket").Translation.z				--pawn:K2_GetActorLocation().z+80
+	--	position.x = pawn.Mesh:GetSocketTransform("headSocket").Translation.y				--pawn:K2_GetActorLocation().x
+	--	position.y = pawn.Mesh:GetSocketTransform("headSocket").Translation.x			--pawn:K2_GetActorLocation().y
+	--end
+end
 
 end)
 

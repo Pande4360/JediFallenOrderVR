@@ -113,13 +113,16 @@ end
 local GameplayStDef= find_required_object("GameplayStatics /Script/Engine.Default__GameplayStatics")
 local game_engine_class = find_required_object("Class /Script/Engine.GameEngine")
 local game_engine = UEVR_UObjectHook.get_first_object_by_class(game_engine_class)
+local CameraMAnager_C= find_required_object("Class /Script/RsGameTechRT.RsCameraManager")
+local CameraManager= UEVR_UObjectHook.get_first_object_by_class(CameraMAnager_C)
 local viewport = game_engine.GameViewport
 local world = viewport.World
 
 --GLOBAL VARIABLES
 isMenu=false
-
-
+isCinematic =false
+isSaberExtended=false
+isNavMode=true
 --Dynamic helper functions:
  ThumbLX   = 0
  ThumbLY   = 0
@@ -175,11 +178,53 @@ function UpdateInput(state)
 
 end
 
-local function UpdateMenuStatus(pawn,world)
-	if GameplayStDef:IsGamePaused(world) or pawn.HC_WorldMap.ShowMap then
+local function UpdateIsNavMode()
+	if not isCinematic then
+		if player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="NavFollow" 
+			or  player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="BalanceBeam" 
+			or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="WallRun"
+			or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="WallJump"
+		then
+		isNavMode=true
+		else 
+		isNavMode=false
+		end
+		
+	else isNavMode=false
+	end
+	end
+
+local function UpdateMenuStatus(pawn,world,player)
+	if pawn==nil then return end
+	
+	if GameplayStDef:IsGamePaused(world) or pawn.HC_WorldMap.ShowMap 
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SkillTree" 
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SavePoint" 
+	or string.find(player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string(),"WorldMap") 
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SkillTree" then
 		isMenu=true
-	else isMenu=false end
+		uevr.params.vr.set_mod_value("UI_FollowView", "false")
+	else isMenu=false
+		uevr.params.vr.set_mod_value("UI_FollowView", "true")
+	end	
 end
+local function CinematicStatus(pawn)
+	if pawn ==nil then return end
+ 	if CameraManager.ViewTarget.Target ~= pawn then
+		isCinematic=true
+		UEVR_UObjectHook.set_disabled(true)
+	else isCinematic=false
+		UEVR_UObjectHook.set_disabled(false)
+	end
+end
+local function UpdateSaberStatus(pawn)
+	if pawn==nil then return end
+	if pawn.LightsaberChild_01.ExtendDir>0 then
+		isSaberExtended=true
+	else isSaberExtended=false
+	end
+end		
+
 
 uevr.sdk.callbacks.on_xinput_get_state(
 function(retval, user_index, state)
@@ -207,9 +252,9 @@ function(engine, delta)
 	local dpawn=api:get_local_pawn(0)	
 	local Player=api:get_player_controller(0)	
 	
-	UpdateMenuStatus(dpawn,world)
-	
-		
+	UpdateMenuStatus(dpawn,world,Player)
+	UpdateSaberStatus(dpawn)
+	CinematicStatus(dpawn)	
 		
 		--isMenu=GameplayStDef:IsGamePaused(world)
 		

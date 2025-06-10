@@ -1,6 +1,6 @@
 {
-    "hide": false,
-    "hide_legacy": false,
+    "hide": true,
+    "hide_legacy": true,
     "path": [
         "Acknowledged Pawn",
         "Properties",

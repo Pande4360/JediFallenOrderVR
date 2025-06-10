@@ -1,6 +1,8 @@
 local uevrUtils = require("libs/uevr_utils")
 require(".\\Subsystems\\UEHelper")
 require(".\\Trackers\\Trackers")
+require(".\\Subsystems\\MeleePower")
+
 local api = uevr.api
 local vr = uevr.params.vr
 --local utils=require(".\\libs\\uevr_utils")
@@ -36,6 +38,8 @@ local Dmg = find_required_object("DMG_Stagger_Light_C /Game/GlobalData/Damage/DM
 local DmgTypeClass= find_required_object("BlueprintGeneratedClass /Game/GlobalData/Damage/DMG_Stagger.DMG_Stagger_C")
 local game_engine_class = find_required_object("Class /Script/Engine.GameEngine")
 local reusable_hit_result = StructObject.new(hitresult_c)
+
+
 
 local reusable_DmgParam= StructObject.new(DmgType_c)
 reusable_DmgParam.HitEvent.AttackType=kismetStringLib:Conv_StringToName("Enum_AttackType::NewEnumerator0")--AttackType			Name
@@ -98,42 +102,107 @@ local AnimData_new= StructObject.new(AnimData)
 local arrayTag = find_required_object("BP_Hero_AttackDescription_Basic_Saber_C /Game/Characters/Hero/Logic/Descriptions/BP_Hero_AttackDescription_Basic_Saber.Default__BP_Hero_AttackDescription_Basic_Saber_C")
 local EmitterTest=find_required_object("Class /Script/Engine.ParticleEmitter")
 
-local K=find_required_object("Emitter /Game/Levels/Bogano/BOG200/SubLevels/BOG200_Ent.BOG200_Ent.PersistentLevel.P_WelderSparks3")
+--local K=find_required_object("Emitter /Game/Levels/Bogano/BOG200/SubLevels/BOG200_Ent.BOG200_Ent.PersistentLevel.P_WelderSparks3")
 
 local game_engine = UEVR_UObjectHook.get_first_object_by_class(game_engine_class)
 local viewport = game_engine.GameViewport
 local world = viewport.World
 local var1=0
-		
+local Sphere_C= find_required_object("Class /Script/Engine.SphereComponent")
+local Capsule_C= find_required_object("Class /Script/Engine.CapsuleComponent")
+
+
+
 		--api:spawn_object(EmitterTest, K)
 --local testEMitter=	GameplayStDef:SpawnEmitterAttached(K, pawn.Mesh,"Root",Vector3d.new(0,0,90),Vector3d.new(0,0,0),Vector3d.new(10000,10000,10000),0,true)--,Diff_Rotator_HR,pawn.Mesh:K2_GetComponentLocation(),1,false)
 uevr.sdk.callbacks.on_pre_engine_tick(
 function(engine, delta)
 	pawn= api:get_local_pawn(0)
+	local SphereComponents= UEVR_UObjectHook.get_objects_by_class(Sphere_C,false)
+		for i, comp in ipairs(SphereComponents) do
+			if comp:get_fname():to_string() == "Collision" then
+			--print(comp:get_full_name())
+			comp:SetHiddenInGame(false,true)
+			comp:SetVisibility(true)
+			comp.SphereRadius=50
+			comp:SetCollisionEnabled(1)
+			comp:SetGenerateOverlapEvents(true)
+			end
+		end	
+	local CapsuleComponents= UEVR_UObjectHook.get_objects_by_class(Capsule_C,false)		
+			
+		for i, comp in ipairs(CapsuleComponents) do
+			if comp:get_fname():to_string() == "DeflectionCapsule" then
+			--print(comp:get_fname():to_string())
+			--comp:SetHiddenInGame(false,true)
+			--comp:SetVisibility(1)
+			comp.CapsuleRadius=100
+			--comp.CapsuleHalfHeight=1
+			end
+			if comp:get_fname():to_string() == "weaponCollision" then
+				comp:SetCollisionEnabled(1)
+				comp:SetGenerateOverlapEvents(true)
+				comp.BodyInstance.CollisionResponses.ResponseToChannels.WorldStatic=1
+				--comp:GetOwner():BlockEnemyAttack()
+			end
+		end	
 		
-		
-	
+	--print(world:get_full_name())
 		UpdateLightsaberMarkTracing(pawn)
 		
 		local _Comps={}
-		if pawn.weaponCollision.bGenerateOverlapEvents == false then
-			pawn.weaponCollision:SetGenerateOverlapEvents(true)
+		if pawn ~=nil then
+			if pawn.weaponCollision.bGenerateOverlapEvents == false then
+				pawn.weaponCollision:SetGenerateOverlapEvents(true)
+			end
+			pawn.weaponCollision:GetOverlappingComponents(_Comps)
+			local check= pawn.weaponCollision:IsOverlappingActor(Component)
+			pawn.weaponCollision:SetCollisionEnabled(1)
+			--print(pawn.weaponCollision:GetCollisionProfileName())
+			--if pawn.weaponCollision:GetCollisionProfileName()~= (uevrUtils.fname_from_string("BulletProjectiles")) then
+				--pawn.weaponCollision:SetCollisionProfileName(uevrUtils.fname_from_string("BulletProjectiles"))
+			--	pawn.weaponCollision:SetCollisionEnabled(1)
+			--end
+			pawn.weaponCollision:SetCollisionResponseToAllChannels(1)
+			pawn.weaponCollision:SetCollisionObjectType(0)
+			--Wpn= find_required_object("CapsuleComponent /Game/Levels/Zeffo/VerticalSlice/VSL100/SubLevels/VSL100_AI.VSL100_AI.PersistentLevel.BP_Grunt00_C_2147371926.weaponCollision")
+			--Wpn:SetCollisionEnabled(1)
+			pawn.weaponCollision.BodyInstance.CollisionResponses.ResponseToChannels.EngineTraceChannel6=1
 		end
-		pawn.weaponCollision:GetOverlappingComponents(_Comps)
-		local check= pawn.weaponCollision:IsOverlappingActor(Component)
-		pawn.weaponCollision:SetCollisionEnabled(1)
-		
-		
-		
+		--print(pawn.Mesh:GetCollisionObjectType())
 		
 		--print(LastTarget)
 		for i, comp in ipairs(_Comps) do
-			if comp:GetOwner() ~= nil then
+			--print(comp:get_fname():to_string())
+			if string.find(comp:GetOwner():get_fname():to_string(), "Blaster") or string.find(comp:get_fname():to_string(), "weaponCollision") then
+				print(comp:get_fname():to_string())
+				pawn.HC_Defense:call("Block Pressed")
+				--pawn.HC_Defense:call("Block Released")
+				--pawn.HC_Defense:
+			end
+			
+			
+			if comp:GetOwner() ~= nil and not string.find(comp:GetOwner():get_fname():to_string(),"Hero") and not string.find(comp:GetOwner():get_fname():to_string(),"Blaster") and not string.find(comp:GetOwner():get_fname():to_string(),"Volume") then
 				--print(comp:GetOwner():get_fname():to_string())
 				--print("next")
 				if  LastTarget == nil then
 					--GameplayStDef:ApplyDamage(comp:GetOwner(),50,nil,pawn,DmgTypeClass)
-					GameplayStatics:RsApplyDamage(comp:GetOwner(),comp,50,nil,pawn,DmgTypeClass,reusable_DmgParam,var1)
+					
+					local Damage = PosDiffWeaponHand/25 *50
+					--pawn.HC_Defense:EnterBlock(false,0)
+					--pawn.HC_Defense:ExitBlock()
+					if PosDiffWeaponHand<10 then
+					--comp:GetOwner().SwAIDefense:StartBlock(pawn,false,1)
+					--comp:GetOwner().SwAIDefense:BlockContact(pawn)
+					--	GameplayStatics:RsApplyDamage(comp:GetOwner(),comp,2,nil,pawn,nil,reusable_DmgParam,var1)
+					else
+					if comp:GetOwner().bCanBlock then
+						comp:GetOwner().SwAIDefense:StartBlock(pawn,false,1)
+						comp:GetOwner().SwAIDefense:BlockContact(pawn)
+					end	
+					GameplayStatics:RsApplyDamage(comp:GetOwner(),comp,Damage,nil,pawn,DmgTypeClass,reusable_DmgParam,var1)
+					
+					end
 					--arrayTag:OnBeginAttack(pawn)
 					--arrayTag:OnDealtAnyDamage(pawn,50,reusable_DmgParam,comp:GetOwner(),pawn)
 					--arrayTag:OnEndAttack(pawn)
@@ -144,8 +213,8 @@ function(engine, delta)
 			--		
 			
 			LastTarget = comp:GetOwner()
-			print(LastTarget:get_fname():to_string())
-			
+			-- wdprint(LastTarget:get_fname():to_string())
+			--print(comp:get_fname():to_string())
 			end
 		end
 		--print(#(_Comps))
@@ -153,6 +222,9 @@ function(engine, delta)
 			LastTarget=nil
 			
 		end
+		
+		
+		
 		
 		--print(" ")
 		--print(" ")

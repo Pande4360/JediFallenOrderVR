@@ -756,7 +756,7 @@ function M.create_component_of_class(className, manualAttachment, relativeTransf
 	if deferredFinish == nil then deferredFinish = false end
 	local baseActor = parent
 	if baseActor == nil or baseActor.AddComponentByClass == nil then baseActor = M.spawn_actor( nil, 1, nil) end
-	local component = baseActor:AddComponentByClass(M.get_class(className), manualAttachment, relativeTransform, deferredFinish)
+	local component = uevr.api:add_component_by_class(baseActor, M.get_class(className), manualAttachment)-- baseActor:AddComponentByClass(M.get_class(className), manualAttachment, relativeTransform, deferredFinish)
 	component:SetVisibility(true)
 	component:SetHiddenInGame(false)
 	if component.SetCollisionEnabled ~= nil then
@@ -1111,8 +1111,8 @@ function M.createPoseableMeshFromSkeletalMesh(skeletalMeshComponent, parent)
 			M.print("Created poseablemeshcomponent" .. poseableComponent:get_full_name())
 			poseableComponent.SkeletalMesh = skeletalMeshComponent.SkeletalMesh		
 			--force initial update
-			poseableComponent:SetLeaderPoseComponent(skeletalMeshComponent, true, false)
-			poseableComponent:SetLeaderPoseComponent(nil, false, false)
+			poseableComponent:SetMasterPoseComponent(skeletalMeshComponent, true, false)
+			poseableComponent:SetMasterPoseComponent(nil, false, false)
 			M.print("Master pose updated")
 			
 			pcall(function()
