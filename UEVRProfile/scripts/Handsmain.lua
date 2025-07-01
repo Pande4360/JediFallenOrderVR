@@ -26,21 +26,26 @@ end
 
 --function Reset_on_change_gear()
 --	if 
-
+local PawnLast=nil
 function on_lazy_poll()
-	if not hands.exists() then
+if pawn~=nil then
+	
+	if not hands.exists() or PawnLast~=pawn then
 		--if not  string.find(pawn:get_fname():to_string(),"Horse") then
-			if pawn ~=nil then
+			--if pawn ~=nil then
 				--if string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Robe") then
-				if isSaberExtended then
+				--if isSaberExtended then
 					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
 					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+					--hands.reset()
+					--hands.destroyHands()
+					--hands.reset()
 					hands.create(pawn.Mesh)
 					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
 					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
-				else
-				hands.create(pawn.Mesh)
-				end
+				--else
+				--hands.create(pawn.Mesh)
+				--end
 			
 		--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
 		--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
@@ -57,7 +62,7 @@ function on_lazy_poll()
 				--		hands.create(pawn.FirstPersonHandsChildActorComponent.ChildActor.RootSkeletalMeshComponent)
 					
 					
-			end	
+			--end	
 		animation.pose("right_hand", "grip_right_weapon")
 		animation.pose("left_hand", "grip_left_weapon")
 		--else
@@ -74,12 +79,14 @@ function on_lazy_poll()
 		--end
 		--animation.pose("right_hand", "grip_right_weapon")
 		--animation.pose("left_hand", "grip_left_weapon")
+		PawnLast=pawn
 	end
+	
 	--attachWeaponToController()
 	--if pawn.FirstPersonUpperBodyChildActorComponent.ChildActor.RootSkeletalMeshComponent ~= nil then
 	--	fixPlayerFOV(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor.RootSkeletalMeshComponent)
 	--end
-
+ end
 end
 
 function attachWeaponToController()
@@ -211,10 +218,9 @@ end
 
 function on_post_engine_tick(engine, delta)
 	--fixWeaponFXFOV()
-	
-	if pawn.FPVMesh ~= nil then
-		pawn.FPVMesh:SetVisibility(false,true)
-	end
+	--if PawnLast~=pawn then
+	--	M.CreateHands
+	--PawnLast=pawn
 	--animation.updateSkeletalVisualization(hands.getHandComponent(1))
 
 end
@@ -309,6 +315,7 @@ local isHoldingWeaponLast=false
 local isChanged=false
 local MenuChanged=false
 --local NextChangeReset=false
+
 uevr.sdk.callbacks.on_pre_engine_tick(
 function(engine, delta)
 
@@ -327,92 +334,82 @@ if not isMenu and MenuChanged then
 	hands.destroyHands()
 	hands.reset()
 end
-local BowHMDDiff=0
-local BowHMDDist=0
-if rightHandComponent~=nil then
-	BowHMDDiff= rightHandComponent:K2_GetComponentLocation()- hmd_component:K2_GetComponentLocation()
-
-	BowHMDDist= math.sqrt(BowHMDDiff.x^2+BowHMDDiff.y^2+BowHMDDiff.z^2)
-end
-if isBow and BowHMDDist< 15 and not isMenu then 
-	if rightHandComponent ~= nil then
-		rightHandComponent:SetVisibility(false)
-	end
-elseif isBow and not isMenu then
-	if rightHandComponent ~= nil then
-		rightHandComponent:SetVisibility(true)
-	end
-end
+--local BowHMDDiff=0
+--local BowHMDDist=0
+--if rightHandComponent~=nil then
+--	BowHMDDiff= rightHandComponent:K2_GetComponentLocation()- hmd_component:K2_GetComponentLocation()
+--
+--	BowHMDDist= math.sqrt(BowHMDDiff.x^2+BowHMDDiff.y^2+BowHMDDiff.z^2)
+--end
+--if isBow and BowHMDDist< 15 and not isMenu then 
+--	if rightHandComponent ~= nil then
+--		rightHandComponent:SetVisibility(false)
+--	end
+--elseif isBow and not isMenu then
+--	if rightHandComponent ~= nil then
+--		rightHandComponent:SetVisibility(true)
+--	end
+--end
 if not hands.exists()   then
 	if pawn.Mesh ~=nil then
 			hands.destroyHands()
 			--hands.reset()
-			
-					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+--			
+--					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+--					--pawn.Mesh:UnHideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
 					hands.create(pawn.Mesh)
-					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
-					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
-				
-			--else--if 	--string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Cuirass") then
-			--	if pawn.FirstPersonHandsChildActorComponent.ChildActor ~=nil then
-			--		hands.destroyHands()
-			--		--hands.reset()
-			--		hands.create(pawn.FirstPersonHandsChildActorComponent.ChildActor.RootSkeletalMeshComponent)
-			--		
-			--	else --hands.create(pawn.FirstPersonSkeletalMeshComponent)
-			--	end
-			
-	
+--					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("l_shoulder"))
+--					--pawn.Mesh:HideBoneByName(kismet_string_library:Conv_StringToName("r_shoulder"))
+--				
+--			--else--if 	--string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Cuirass") then
+--			--	if pawn.FirstPersonHandsChildActorComponent.ChildActor ~=nil then
+--			--		hands.destroyHands()
+--			--		--hands.reset()
+--			--		hands.create(pawn.FirstPersonHandsChildActorComponent.ChildActor.RootSkeletalMeshComponent)
+--			--		
+--			--	else --hands.create(pawn.FirstPersonSkeletalMeshComponent)
+--			--	end
+--			
+--	
 	end	
+end
+----else
+----	if pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor ~=nil then
+----			if string.find(pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Robe") then
+----				hands.create(pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor.RootSkeletalMeshComponent)
+----			else--if 	--string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Cuirass") then
+----				if pawn.Rider.FirstPersonHandsChildActorComponent.ChildActor ~=nil then
+----					hands.create(pawn.Rider.FirstPersonHandsChildActorComponent.ChildActor.RootSkeletalMeshComponent)
+----				else --hands.create(pawn.FirstPersonSkeletalMeshComponent)
+----				end
+----			end
+----	else 
+----	end	
+--	--hands.reset()
+--	animation.pose("right_hand", "grip_right_weapon")
+--	animation.pose("left_hand", "grip_left_weapon")
+--end
+--
+--if isSaberExtended then
+--	animation.pose("right_hand", "grip_right_weapon")
+--	animation.pose("left_hand", "grip_left_weapon")
 --else
---	if pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor ~=nil then
---			if string.find(pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Robe") then
---				hands.create(pawn.Rider.FirstPersonUpperBodyChildActorComponent.ChildActor.RootSkeletalMeshComponent)
---			else--if 	--string.find(pawn.FirstPersonUpperBodyChildActorComponent.ChildActor:get_fname():to_string(),"Cuirass") then
---				if pawn.Rider.FirstPersonHandsChildActorComponent.ChildActor ~=nil then
---					hands.create(pawn.Rider.FirstPersonHandsChildActorComponent.ChildActor.RootSkeletalMeshComponent)
---				else --hands.create(pawn.FirstPersonSkeletalMeshComponent)
---				end
---			end
---	else 
---	end	
-	--hands.reset()
-	animation.pose("right_hand", "grip_right_weapon")
-	animation.pose("left_hand", "grip_left_weapon")
-end
+--isHoldingWeapon=false
+--animation.pose("right_hand", "open_right")
+--animation.pose("left_hand", "open_left")
+--animation.updateAnimation("left_hand", "left_trigger", false)
+----animation.updateAnimation("right_hand", "right_grip", rShoulder)
+-- end
+-- if isHoldingWeaponLast ~= isHoldingWeapon then
+--	isChanged =true
+--end
+-- isHoldingWeaponLast=isHoldingWeapon
 
-if isWeaponDrawn and isHoldingWeapon==false then
-	isHoldingWeapon=true
-	animation.pose("right_hand", "grip_right_weapon")
-	animation.pose("left_hand", "grip_left_weapon")
-elseif not isWeaponDrawn and isHoldingWeapon==true then
-isHoldingWeapon=false
-animation.pose("right_hand", "open_right")
-animation.pose("left_hand", "open_left")
-animation.updateAnimation("left_hand", "left_trigger", false)
---animation.updateAnimation("right_hand", "right_grip", rShoulder)
- end
- if isHoldingWeaponLast ~= isHoldingWeapon then
-	isChanged =true
-end
- isHoldingWeaponLast=isHoldingWeapon
-if isHoldingWeapon== false then
-	animation.updateAnimation("right_hand", "right_grip", rShoulder)
-	animation.updateAnimation("left_hand", "left_trigger", false)
-	if LTrigger==0 then
-	--animation.updateAnimation("right_hand", "right_grip", true)
-	animation.updateAnimation("left_hand", "left_grip", lShoulder)
-	animation.updateAnimation("left_hand", "left_trigger", LTrigger>0)
-	elseif LTrigger ~= 0 and lShoulder then 
-	animation.updateAnimation("left_hand", "left_trigger", LTrigger>0)
-	end
-end
 
 --if  isChanged==true then
 --	isChanged=false
 	--if isBow and isWeaponDrawn then
-		currentLeftLocation={-145, -26, 33}
+	--	currentLeftLocation={-145, -26, 33}
 	--	hands.SetLocation(0, currentLeftLocation)
 		--hands.adjustLocation(currentHand, 1, 0.5)
 	--else	
@@ -434,7 +431,7 @@ end
 --	animation.initPoseableComponent((hand == 1) and rightHandComponent or leftHandComponent, (hand == 1) and rightJointName or leftJointName, (hand == 1) and rightShoulderName or leftShoulderName, (hand == 1) and leftShoulderName or rightShoulderName, location, rotation, uevrUtils.vector(currentScale, currentScale, currentScale), rootBoneName)
 --	end
 --end
-
+--animation.logBoneRotators(rightHandComponent, handBoneList)
 
 end)
 

@@ -1,0 +1,7 @@
+require(".\\Main\\SaberMelee")
+require(".\\Main\\Controls")
+require(".\\Main\\CameraManager")
+require(".\\Subsystems\\UEHelper")
+require(".\\Trackers\\Trackers")
+require(".\\Subsystems\\HolsterScript")
+require(".\\Subsystems\\MeleePower")

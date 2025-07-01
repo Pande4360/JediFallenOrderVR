@@ -43,7 +43,9 @@ local YawLast=0
 local LeftRightScaleFactor		=0
 local ForwardBackwardScaleFactor=0
 	
-
+local DecoupledYawCurrentRot = 0
+local RXState=0
+local SnapAngle=0
 
 
 uevr.sdk.callbacks.on_pre_engine_tick(
@@ -56,13 +58,15 @@ function(engine, delta)
 	
 	local HmdXY= hmd_component:K2_GetComponentRotation()
 
-if isNavMode then
-
-	player:ClientSetRotation(RotatorXYZ,true)
+if not isCinematic then
+	player:SetCameraRotation(RotatorXYZ,false,false,false,true)
+	--player:ClientSetRotation(RotatorXYZ,false)
 end
 --	pawn.Instigator:RotateToAlignXY({HmdXY.x,HmdXY.y})
 	
-
+if isMenu then
+	uevr.params.vr.set_mod_value("VR_DecoupledPitch", "false")
+else uevr.params.vr.set_mod_value("VR_DecoupledPitch", "true") end
 
 --print(isRiding
 
@@ -152,36 +156,7 @@ end
 	--end
 	
 
-
-
-end)
-
-local DecoupledYawCurrentRot = 0
-local RXState=0
-local SnapAngle
- 
-
-
-
-uevr.sdk.callbacks.on_xinput_get_state(
-function(retval, user_index, state)
-
-
---Read Gamepad stick input for rotation compensation
-	--if HeadBasedMovement   then
-	
-	
-	
-	
-	if isNavMode then
-		state.Gamepad.sThumbLX= ThumbLX*math.cos(-AlphaDiff)- ThumbLY*math.sin(-AlphaDiff)
-				
-		state.Gamepad.sThumbLY= math.sin(-AlphaDiff)*ThumbLX + ThumbLY*math.cos(-AlphaDiff)
-	end	
-	--end
-
-
-
+--print(ThumbRX)
 	SnapAngle = PositiveIntegerMask(uevr.params.vr:get_mod_value("VR_SnapturnTurnAngle"))
 	if SnapTurn then
 		if ThumbRX >200 and RXState ==0 and not isMenu then
@@ -197,19 +172,48 @@ function(retval, user_index, state)
 	
 	else
 		
-		SmoothTurnRate = PositiveIntegerMask(uevr.params.vr:get_mod_value("VR_SnapturnTurnAngle"))/90
+		SmoothTurnRate = PositiveIntegerMask(uevr.params.vr:get_mod_value("VR_SnapturnTurnAngle"))/360
 	
 	
-		local rate = state.Gamepad.sThumbRX/32767
-					rate =  rate*rate*rate
+		local rate = (ThumbRX/32767)
+					
 		if ThumbRX >2200 and not isMenu   then
-			DecoupledYawCurrentRot=DecoupledYawCurrentRot + SmoothTurnRate * rate
-			
+			DecoupledYawCurrentRot=DecoupledYawCurrentRot + SmoothTurnRate * rate* delta*555
+			--print(rate)
 		elseif ThumbRX <-2200 and not isMenu   then
-			DecoupledYawCurrentRot=DecoupledYawCurrentRot + SmoothTurnRate * rate
-		
+			DecoupledYawCurrentRot=DecoupledYawCurrentRot + SmoothTurnRate * rate* delta*555
+		end
+		if DecoupledYawCurrentRot > 360 or DecoupledYawCurrentRot < -360 then
+			DecoupledYawCurrentRot=0
 		end
 	end
+
+
+end)
+
+
+ 
+
+
+
+uevr.sdk.callbacks.on_xinput_get_state(
+function(retval, user_index, state)
+
+
+--Read Gamepad stick input for rotation compensation
+	--if HeadBasedMovement   then
+	
+	
+	
+	
+	if  not isMenu then
+		state.Gamepad.sThumbLX= ThumbLX*math.cos(-AlphaDiff)- ThumbLY*math.sin(-AlphaDiff)
+				
+		state.Gamepad.sThumbLY= math.sin(-AlphaDiff)*ThumbLX + ThumbLY*math.cos(-AlphaDiff)
+	end	
+	--end
+
+
 
 
 end)
@@ -223,29 +227,32 @@ uevr.sdk.callbacks.on_early_calculate_stereo_view_offset(function(device, view_i
 PreRot=rotation.y
 DiffRot= HmdRotator.y - RightRotator.y
 
-if isNavMode then
+local pawn = api:get_local_pawn(0)	
+local player =api:get_player_controller(0)
+
+if not isCinematic or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="ForceAttack" then
 	rotation.y = DecoupledYawCurrentRot
 end	
 	
 	--vr.recenter_view()
-local pawn = api:get_local_pawn(0)	
 
-local Mesh=pawn.Mesh
-			local default_transform = Mesh:GetSocketTransform("rootSocket",2)--Transform(attach_socket_name, 2)
-			local offset_transform = Mesh:GetSocketTransform("head_socket",2)--weapon_mesh:GetSocketTransform("jnt_offset", 2)
-			
-			--local middle_translation = kismet_math_library:Add_VectorVector(default_transform.Translation, offset_transform.Translation)
-			local location_diff = kismet_math_library:Subtract_VectorVector(
-				Vector3f.new(0,0,0),
-				offset_transform.Translation--Vector3f.new(0,0,0)
-			)
-			-- from UE to UEVR X->Z Y->-X, Z->-Y
-			-- Z - forward, X - negative right, Y - negative up
-			local lossy_offset = Vector3f.new(-location_diff.y, -location_diff.z, location_diff.x)
-
+if pawn~=nil then
+	--local Mesh=pawn.Mesh
+	--local default_transform = Mesh:GetSocketTransform("rootSocket",2)--Transform(attach_socket_name, 2)
+	--local offset_transform = Mesh:GetSocketTransform("head_socket",2)--weapon_mesh:GetSocketTransform("jnt_offset", 2)
+	--
+	----local middle_translation = kismet_math_library:Add_VectorVector(default_transform.Translation, offset_transform.Translation)
+	--local location_diff = kismet_math_library:Subtract_VectorVector(
+	--	Vector3f.new(0,0,0),
+	--	offset_transform.Translation--Vector3f.new(0,0,0)
+	--)
+	---- from UE to UEVR X->Z Y->-X, Z->-Y
+	---- Z - forward, X - negative right, Y - negative up
+	--local lossy_offset = Vector3f.new(-location_diff.y, -location_diff.z, location_diff.x)
+end
 
 --print(isCinematic)
-if not isCinematic then
+if not isCinematic and not isMenu or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="ForceAttack"  then
 	--if   player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="NavFollow"  then
 		position.z = pawn:K2_GetActorLocation().z+80
 		--local BaseFactor= pawn.Mesh:GetSocketTransform("headSocket").Translation - pawn.Mesh:GetSocketTransform("rootSocket").Translation
@@ -256,8 +263,8 @@ if not isCinematic then
 		
 			
 		--if BaseFactor~=0 then
-			position.x = pawn:K2_GetActorLocation().x--+pawn:GetActorForwardVector().x*DIst	+pawn:GetActorForwardVector().x*10
-			position.y = pawn:K2_GetActorLocation().y--+pawn:GetActorForwardVector().y*DIst   +pawn:GetActorForwardVector().y*10
+			position.x = pawn:K2_GetActorLocation().x +pawn:GetActorForwardVector().x*(-0)--*DIst	+pawn:GetActorForwardVector().x*10
+			position.y = pawn:K2_GetActorLocation().y +pawn:GetActorForwardVector().y*(-0)--*DIst   +pawn:GetActorForwardVector().y*10
 		--else
 		--	position.x = pawn:K2_GetActorLocation().x
 		--	position.y = pawn:K2_GetActorLocation().y
@@ -267,6 +274,7 @@ if not isCinematic then
 	--	position.x = pawn.Mesh:GetSocketTransform("headSocket").Translation.y				--pawn:K2_GetActorLocation().x
 	--	position.y = pawn.Mesh:GetSocketTransform("headSocket").Translation.x			--pawn:K2_GetActorLocation().y
 	--end
+
 end
 
 end)
@@ -274,8 +282,7 @@ end)
 uevr.sdk.callbacks.on_post_calculate_stereo_view_offset(function(device, view_index, world_to_meters, position, rotation, is_double)
 	--print(DecoupledYawCurrentRot)
 local pawn=api:get_local_pawn(0)
-
-	
+local player =api:get_player_controller(0)
 
 	DecoupledYawCurrentRotLast=rotation.y	
 -- if ConditionChagned then

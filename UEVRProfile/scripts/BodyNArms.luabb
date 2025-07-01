@@ -1,6 +1,6 @@
 local uevrUtils = require("libs/uevr_utils")
-require(".\\Subsystems\\UEHelper")
-require(".\\Trackers\\Trackers")
+--require(".\\Subsystems\\UEHelper")
+--require(".\\Trackers\\Trackers")
 
 local api = uevr.api
 local vr = uevr.params.vr

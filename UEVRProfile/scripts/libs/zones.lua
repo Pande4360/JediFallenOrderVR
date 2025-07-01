@@ -1,5 +1,6 @@
 local SeatedOffset = 0
-
+--define Haptic zones RHand Z: UP/DOWN, Y:RIGHT LEFT, X FORWARD BACKWARD, checks if RHand is in RZone
+RHZoneBottom=   {-100, -50, -50, 50, -50, 50+SeatedOffset}
 RHZoneHead=		{0, 20, -5, 5, 0, 20+SeatedOffset}
 RHZoneRSh= 		{-10, 15, 10, 30, -10, 20+SeatedOffset}
 RHZoneLSh= 		{-10, 15, -30, -10, -10, 20+SeatedOffset	}

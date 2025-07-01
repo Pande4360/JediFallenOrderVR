@@ -85,10 +85,10 @@ Instructions for getting hand animations
 local M = {}
 
 --for location x is +up/-down-pitch   y is left/right-roll z is +back/-forth-yaw
-local currentRightRotation = {190, 0, 0}
-local currentRightLocation = {-09, 0,0}
-local currentLeftRotation = {10, 0, 0}
-	  currentLeftLocation = {-9, 0, -00}--{-140, -28, 32}
+local currentRightRotation = {215, 0, 0}
+local currentRightLocation = {-06, 1.2,0}
+local currentLeftRotation = {30, 0, 0}
+	  currentLeftLocation = {-5, -3, -00}--{-140, -28, 32}
 local currentScale = 1.0
 
  rightHandComponent = nil
@@ -104,9 +104,9 @@ local currentScale = 1.0
 local rootBones = {}
 rootBones[1] = {bone=defaultRootBoneName, offset={X=0, Y=0, Z=0, Pitch=0, Yaw=0, Roll=0}}
 
-local boneList = {31, 53, 74,92,114,167,189,211,233,254}
+local boneList = {15, 19, 23,27,31,73,77,81,85,89}
 
- handBoneList = {31, 53, 74,92,114,167,189,211,233,254 }
+ handBoneList = {15, 19, 23,27,31,73,77,81,85,89}
 
 function M.print(text)
 	uevrUtils.print("[hands] " .. text)
@@ -291,8 +291,9 @@ local currentIndex = 1
 			if currentIndex > 3 then currentIndex = 1 end
 			print("Current finger joint", currentFinger, currentIndex)
 		end)
-animation.logBoneNames(pawn.Mesh)
-
+--animation.logBoneNames(pawn.Mesh)
+--animation.logBoneNames(rightHandComponent)
+--animation.logBoneRotators(rightHandComponent, handBoneList)
 return M
 
 

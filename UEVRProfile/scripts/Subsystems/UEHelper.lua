@@ -4,6 +4,7 @@ local api = uevr.api
 	local params = uevr.params
 	local callbacks = params.sdk.callbacks
 	local pawn = api:get_local_pawn(0)
+	local player= api:get_player_controller(0)
 	local vr=uevr.params.vr
 
 
@@ -121,8 +122,10 @@ local world = viewport.World
 --GLOBAL VARIABLES
 isMenu=false
 isCinematic =false
-isSaberExtended=false
+isSaber1Extended=false
+isSaber2Extended=false
 isNavMode=true
+isSaberDetached=false
 --Dynamic helper functions:
  ThumbLX   = 0
  ThumbLY   = 0
@@ -140,12 +143,14 @@ isNavMode=true
  Ybutton = false
  SelectButton=false
 
+--local variables
+local isRecentered=false
 
 
-
-function UpdateInput(state)
+local function UpdateInput(state)
 
 --Read Gamepad stick input 
+	--print(state.Gamepad.sThumbRX)
 	ThumbLX = state.Gamepad.sThumbLX
 	ThumbLY = state.Gamepad.sThumbLY
 	ThumbRX = state.Gamepad.sThumbRX
@@ -161,11 +166,20 @@ function UpdateInput(state)
 	Xbutton  = isButtonPressed(state, XINPUT_GAMEPAD_X)
 	Ybutton  = isButtonPressed(state, XINPUT_GAMEPAD_Y)
 
-	
+
 
 	
 --UnpressButton
-
+if not isMenu then
+	state.Gamepad.sThumbRX=0
+	if not player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string() == "Climb" then
+	state.Gamepad.bLeftTrigger =0
+	end 
+	state.Gamepad.bRightTrigger=0
+		unpressButton(state,XINPUT_GAMEPAD_A)
+		unpressButton(state,XINPUT_GAMEPAD_B)
+		unpressButton(state,XINPUT_GAMEPAD_X)
+		unpressButton(state,XINPUT_GAMEPAD_RIGHT_SHOULDER)
 	--	unpressButton(state,XINPUT_GAMEPAD_LEFT_SHOULDER)
 	--	unpressButton(state,XINPUT_GAMEPAD_LEFT_THUMB)
 	
@@ -174,8 +188,16 @@ function UpdateInput(state)
 	--end
 	--if lShoulder then
 	--	pressButton(state,XINPUT_GAMEPAD_LEFT_THUMB)
-	--end
+end
 
+end
+
+isInAir=false
+local function UpdateAirStatus(dpawn)
+	if dpawn==nil then return end
+	if dpawn.Mesh.AnimScriptInstance.AtrTagIsAir == true then
+			isInAir=true
+	else isInAir=false end
 end
 
 local function UpdateIsNavMode()
@@ -184,6 +206,7 @@ local function UpdateIsNavMode()
 			or  player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="BalanceBeam" 
 			or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="WallRun"
 			or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="WallJump"
+			or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="FocusAttack"
 		then
 		isNavMode=true
 		else 
@@ -192,7 +215,8 @@ local function UpdateIsNavMode()
 		
 	else isNavMode=false
 	end
-	end
+end
+
 
 local function UpdateMenuStatus(pawn,world,player)
 	if pawn==nil then return end
@@ -201,10 +225,22 @@ local function UpdateMenuStatus(pawn,world,player)
 	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SkillTree" 
 	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SavePoint" 
 	or string.find(player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string(),"WorldMap") 
-	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SkillTree" then
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="SkillTree"
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="TTL_VoidSky"
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="DeathCombat"
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="CameraComponent"
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="CameraActor"
+	or player.PlayerCameraManager.ActiveCameraMode.ModeName:to_string()=="MeditationTraining"	then
 		isMenu=true
+		if isRecentered == false then
+			vr:recenter_view()
+			isRecentered=true
+		end
+		uevr.params.vr.set_mod_value("VR_2DScreenMode", "true") 
 		uevr.params.vr.set_mod_value("UI_FollowView", "false")
 	else isMenu=false
+		isRecentered=false
+		uevr.params.vr.set_mod_value("VR_2DScreenMode", "false") 
 		uevr.params.vr.set_mod_value("UI_FollowView", "true")
 	end	
 end
@@ -220,8 +256,12 @@ end
 local function UpdateSaberStatus(pawn)
 	if pawn==nil then return end
 	if pawn.LightsaberChild_01.ExtendDir>0 then
-		isSaberExtended=true
-	else isSaberExtended=false
+		isSaber1Extended=true
+	else isSaber1Extended=false
+	end
+	if pawn.LightsaberChild_02.ExtendDir>0 then
+		isSaber2Extended=true
+	else isSaber2Extended=false
 	end
 end		
 
@@ -230,7 +270,7 @@ uevr.sdk.callbacks.on_xinput_get_state(
 function(retval, user_index, state)
 local dpawn=nil
 dpawn=api:get_local_pawn(0)
-
+player=api:get_player_controller(0)
 
 	--UpdateDriveStatus(dpawn)
 	
@@ -255,9 +295,9 @@ function(engine, delta)
 	UpdateMenuStatus(dpawn,world,Player)
 	UpdateSaberStatus(dpawn)
 	CinematicStatus(dpawn)	
-		
+	UpdateAirStatus(dpawn)	
 		--isMenu=GameplayStDef:IsGamePaused(world)
-		
+	--print(ThumbRX)
 		--local PMesh=pawn.FirstPersonSkeletalMeshComponent
 
 end)

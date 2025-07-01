@@ -1,5 +1,5 @@
 	--CONFIG
-	require(".\\Subsystems\\UEHelper")
+	--require(".\\Subsystems\\UEHelper")
 	--require(".\\Config\\CONFIG")
 	--local MeleePower = 500 --Default = 1000
 	---------------------------------------
@@ -145,27 +145,7 @@ local InitDelta=0
 local LeftController=		 uevr.params.vr.get_left_joystick_source()
 local RightController=		 uevr.params.vr.get_right_joystick_source()
 
-local function UpdatePlayerCollision(delta)
-	if pawn.CapsuleComponent~=nil and Init==false then
-	InitDelta=InitDelta+delta
-	pawn.CapsuleComponent.CapsuleHalfHeight= 200.0
-	end
-	if Init==false and InitDelta>10 then
-		pawn:Crouch(true)
-		Init=true
-		print("init")
-	end
-	
-		if not isRiding and Init==true then
-			if math.abs(ThumbLX)>=20000 or math.abs(ThumbLY) >= 20000 then
-				--pawn.CapsuleComponent.CapsuleHalfHeight= CapsuleHalfHeightWhenMoving
-				--pawn.CapsuleComponent.CapsuleRadius= CapsuleRadWhenMoving
-			else pawn.CapsuleComponent.CapsuleRadius=11.480
-				
-				--pawn.CharacterMovement:SetWalkableFloorAngle(90)
-			end
-		end
-end
+
 
 uevr.sdk.callbacks.on_pre_engine_tick(
 function(engine, delta)
@@ -189,7 +169,7 @@ function(engine, delta)
 	local PosYNew=WeaponHand_Pos.y
 	local PosZNew=WeaponHand_Pos.z
 	
-	PosDiffWeaponHand = math.sqrt((PosXNew-PosXOld)^2+(PosYNew-PosYOld)^2+(PosZNew-PosZOld)^2)*(1/delta)*100
+	PosDiffWeaponHand = math.sqrt((PosXNew-PosXOld)^2+(PosYNew-PosYOld)^2+(PosZNew-PosZOld)^2)*(1/delta)*10
 	PosZOld=PosZNew
 	PosYOld=PosYNew
 	PosXOld=PosXNew
@@ -199,7 +179,7 @@ function(engine, delta)
 	local PosYNewSecondary=SecondaryHand_Pos.y
 	local PosZNewSecondary=SecondaryHand_Pos.z
 	
-	PosDiffSecondaryHand = math.sqrt((PosXNewSecondary-PosXOldSecondary)^2+(PosYNewSecondary-PosYOldSecondary)^2+(PosZNewSecondary-PosZOldSecondary)^2)*(1/delta)*200
+	PosDiffSecondaryHand = math.sqrt((PosXNewSecondary-PosXOldSecondary)^2+(PosYNewSecondary-PosYOldSecondary)^2+(PosZNewSecondary-PosZOldSecondary)^2)*(1/delta)*10
 	PosZOldSecondary=PosZNewSecondary
 	PosYOldSecondary=PosYNewSecondary
 	PosXOldSecondary=PosXNewSecondary
